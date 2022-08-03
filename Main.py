@@ -66,33 +66,21 @@ with mp_hands.Hands(
         mouseZ_16 = int(hand_landmarks.landmark[16].z * 1000)
 
         # 움직임 이벤트
-        t = threading.Thread(moveMouse(mouseX_8, mouseY_8))
-        t.start()
+        moveMouse(mouseX_8, mouseY_8)
 
         # 좌클릭 이벤트0
-        clickDirX_Left = (mouseX_8**2 + mouseX_4**2)**(1/2)
-        clickDirY_Left = (mouseY_8**2 + mouseY_4**2)**(1/2)
-        clickDirZ_Left = (mouseZ_8**2 + mouseZ_4**2)**(1/2) # 실제 계싼 값
-        print("%04.2f,\t%04.2f,\t%04.2f"%(clickDirX_Left, clickDirY_Left, clickDirZ_Left))
-        if(clickDirZ_Left < 50):
-          pyautogui.click()
+        clickDirX_Left = (mouseX_8 - mouseX_4)**(2)
+        clickDirY_Left = (mouseY_8 - mouseY_4)**(2)
+        clickDirZ_Left = (mouseZ_8 - mouseZ_4)**(2) # 실제 계싼 값
+        clickDirLast = (clickDirX_Left + clickDirY_Left + clickDirZ_Left)**(1/2)
+        
+        if(clickDirLast < 50):
+          pyautogui.mouseDown()
           print("좌클릭")
-
-        # # 더블클릭 이벤트
-        # clickDir_DoubleCLick = (mouseY_12^2 + mouseY_4^2)**(1/2)
-        # if(clickDir_DoubleCLick < 10):
-        #   pyautogui.doubleClick()
-        #   print("더블클릭")
-
-        # # 우클릭 이벤트
-        # clickDir_Right = (mouseY_16^2 + mouseY_4^2)**(1/2)
-        # if(clickDir_Right < 10):
-        #   pyautogui.rightClick()
-        #   print("우클릭")
 
         break
 
-    cv2.imshow('MediaPipe Hands', cv2.flip(image, 1))
+    cv2.imshow('HandMouse', cv2.flip(image, 1))
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 cap.release()
